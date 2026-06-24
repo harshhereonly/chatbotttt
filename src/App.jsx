@@ -7,7 +7,7 @@ const MODEL = 'llama-3.3-70b-versatile';
 const MODEL_LABEL = 'Groq · Llama 3.3 70B';
 const MAX_TOKENS = 512;
 const USER_MESSAGE_LIMIT = 2000;
-const HISTORY_TOKEN_LIMIT = 10000;
+const HISTORY_TOKEN_LIMIT = 9000;
 const SYSTEM_PROMPT = `You are a customer support assistant for Houston Systems Pvt. Ltd., a security and access management automation company based in Noida, India.
 
 Company info:
@@ -276,8 +276,16 @@ export default function App() {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const [showChips, setShowChips] = useState(true);
   const [error, setError] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+
+  const ELEVEN_API_KEY = import.meta.env.VITE_ELEVEN_API_KEY;
+  const ELEVEN_VOICE_ID = import.meta.env.VITE_ELEVEN_VOICE_ID;
+
+  const audioRef = useRef(null);
 
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
@@ -295,11 +303,7 @@ export default function App() {
     el.style.height = `${el.scrollHeight}px`;
   }, [inputText]);
 
-  // ── Show welcome message on load
-  useEffect(() => {
-    const t = setTimeout(() => setMessages([makeWelcome()]), 650);
-    return () => clearTimeout(t);
-  }, []);
+  // NOTE: welcome message will be shown when user opens the chat (user gesture)
 
   // ── Call Groq API
   const callGroq = useCallback(async (history) => {
@@ -331,10 +335,109 @@ export default function App() {
     );
   }, []);
 
+  // ── Text-to-Speech using ElevenLabs (preferred) with SpeechSynthesis fallback
+  const stopAudio = useCallback(() => {
+    if (audioRef.current) {
+      try { audioRef.current.pause(); } catch(e) {}
+      audioRef.current = null;
+    }
+    try {
+      if (typeof window !== 'undefined' && window.speechSynthesis) window.speechSynthesis.cancel();
+    } catch (e) {}
+    setIsSpeaking(false);
+  }, []);
+
+  function cleanTextForTTS(text) {
+    if (!text) return '';
+    // remove common bullet markers at start of lines
+    let cleaned = text.split('\n').map(l => l.replace(/^[\s]*[•\-\*\u2022]+\s*/,'')).join(' ');
+    // remove emails and urls
+    cleaned = cleaned.replace(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/ig, '');
+    cleaned = cleaned.replace(/https?:\/\/\S+|www\.\S+/ig, '');
+    // remove extra punctuation that reads awkwardly
+    cleaned = cleaned.replace(/[\u2022\*\-]+/g, '');
+    cleaned = cleaned.replace(/\s+/g, ' ').trim();
+    return cleaned;
+  }
+
+  const speakText = useCallback(async (text) => {
+    if (!voiceEnabled) return;
+    // stop any currently playing audio
+    stopAudio();
+
+    const cleaned = cleanTextForTTS(text);
+    if (!cleaned) return;
+
+    // Prefer ElevenLabs
+    if (ELEVEN_API_KEY && ELEVEN_VOICE_ID) {
+      try {
+        setIsSpeaking(true);
+        const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${ELEVEN_VOICE_ID}`, {
+          method: 'POST',
+          headers: {
+            'xi-api-key': ELEVEN_API_KEY,
+            'Content-Type': 'application/json',
+            'Accept': 'audio/mpeg',
+          },
+          body: JSON.stringify({ text: cleaned, model: 'eleven_multilingual_v2' }),
+        });
+
+        if (!res.ok) {
+          const body = await res.text().catch(() => '');
+          throw new Error(body || `ElevenLabs TTS error ${res.status}`);
+        }
+
+        const audioData = await res.arrayBuffer();
+        const blob = new Blob([audioData], { type: 'audio/mpeg' });
+        const url = URL.createObjectURL(blob);
+        const audio = new Audio(url);
+        audioRef.current = audio;
+        try {
+          await audio.play();
+        } catch (playErr) {
+          console.error('Audio playback failed', playErr);
+          setError(`Unable to play audio: ${playErr.message}`);
+        }
+        audio.onended = () => {
+          URL.revokeObjectURL(url);
+          audioRef.current = null;
+          setIsSpeaking(false);
+        };
+        return;
+      } catch (err) {
+        console.error('ElevenLabs TTS failed, falling back:', err);
+        setError(err.message || String(err));
+        setIsSpeaking(false);
+        // fall through to SpeechSynthesis fallback
+      }
+    }
+
+    // Fallback: browser SpeechSynthesis
+    try {
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
+        const utter = new SpeechSynthesisUtterance(cleaned);
+        const voices = window.speechSynthesis.getVoices();
+        if (voices && voices.length) utter.voice = voices[0];
+        window.speechSynthesis.cancel();
+        setIsSpeaking(true);
+        window.speechSynthesis.speak(utter);
+        utter.onend = () => setIsSpeaking(false);
+      }
+    } catch (synthErr) {
+      console.error('SpeechSynthesis fallback failed:', synthErr);
+      setIsSpeaking(false);
+    }
+  }, [voiceEnabled, ELEVEN_API_KEY, ELEVEN_VOICE_ID, stopAudio]);
+
+  // welcome is spoken directly from the user click handler when opening chat
+
   // ── Send a message
   const sendMessage = useCallback(async (text) => {
     const trimmed = text.trim();
     if (!trimmed || isTyping) return;
+
+    // stop any currently playing audio when user sends a new message
+    stopAudio();
 
     if (trimmed.length > USER_MESSAGE_LIMIT) {
       setError(`Please keep your message under ${USER_MESSAGE_LIMIT} characters.`);
@@ -368,12 +471,14 @@ export default function App() {
         text: replyText,
         time: formatTime(new Date()),
       }]);
+      // Speak the reply if voice is enabled
+      speakText(replyText).catch(() => {});
     } catch (err) {
       setError(err.message);
     } finally {
       setIsTyping(false);
     }
-  }, [messages, isTyping, callGroq]);
+  }, [messages, isTyping, callGroq, speakText, stopAudio]);
 
   // ── Keyboard: Enter sends, Shift+Enter adds newline
   const handleKeyDown = (e) => {
@@ -386,7 +491,8 @@ export default function App() {
   // ── Render: Chat UI
   return (
     <div className="page-wrapper">
-      <div className="chat-widget">
+      {isOpen && (
+        <div className="chat-widget">
 
         {/* ── Header ── */}
         <header className="chat-header">
@@ -402,6 +508,30 @@ export default function App() {
             <div className="header-meta">
               <div className="header-status"><span>●</span> Online</div>
               <div className="model-badge" title="Model in use">{MODEL_LABEL}</div>
+              <button
+                className="close-chat"
+                aria-label="Close chat"
+                onClick={() => { stopAudio(); setIsOpen(false); }}
+                title="Close chat"
+                style={{ marginLeft: 8 }}
+              >
+                ✕
+              </button>
+              <button
+                className={`voice-toggle ${voiceEnabled ? 'on' : 'off'}`}
+                onClick={() => setVoiceEnabled(v => !v)}
+                aria-pressed={voiceEnabled}
+                aria-label="Toggle voice"
+                title={voiceEnabled ? 'Voice on' : 'Voice off'}
+              >
+                <svg className="speaker-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M5 9v6h4l5 4V5L9 9H5z" fill="currentColor" />
+                  <path d="M16.5 8.5a4.5 4.5 0 010 7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                </svg>
+                {isSpeaking && (
+                  <span className="voice-dot" aria-hidden="true" />
+                )}
+              </button>
             </div>
           </div>
         </header>
@@ -470,6 +600,28 @@ export default function App() {
         </div>
 
       </div>
+
+      )}
+
+      {/* Floating launcher button */}
+      {!isOpen && (
+        <button
+          className="chat-launcher"
+          aria-label="Open chat"
+          onClick={() => {
+            // user gesture: open chat, show welcome, and speak immediately
+            if (!isOpen) {
+              setIsOpen(true);
+              const welcome = makeWelcome();
+              setMessages([welcome]);
+              // speak immediately within user click handler
+              if (voiceEnabled) speakText(welcome.text).catch(() => {});
+            }
+          }}
+        >
+          💬
+        </button>
+      )}
 
       {/* ── Footer ── */}
       <div className="powered-by" aria-label="Powered by Groq">
