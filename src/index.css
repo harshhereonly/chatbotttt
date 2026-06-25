@@ -529,6 +529,124 @@ body {
 
 .send-icon { width: 18px; height: 18px; }
 
+/* Lead form styles */
+.lead-form-wrapper {
+  padding: 0 16px 12px;
+}
+
+.lead-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.lead-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.lead-form input,
+.lead-form select {
+  width: 100%;
+  border: 1.5px solid var(--border-input);
+  border-radius: 14px;
+  background: var(--bg-widget);
+  color: var(--text-primary);
+  padding: 11px 13px;
+  font-size: 14px;
+  outline: none;
+}
+
+.lead-form input::placeholder {
+  color: var(--text-muted);
+}
+
+.lead-form input:focus,
+.lead-form select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(29,158,117,0.16);
+}
+
+.lead-field-error {
+  color: #ff6b6b;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.lead-error {
+  font-size: 13px;
+  color: #fee2e2;
+  background: rgba(248, 113, 113, 0.12);
+  border: 1px solid rgba(248, 113, 113, 0.24);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.lead-form-bubble {
+  background: #0b2218;
+  border: 1px solid rgba(29,158,117,0.32);
+}
+
+.lead-submit-btn {
+  width: 100%;
+  margin-top: 6px;
+  border: none;
+  color: white;
+  background: linear-gradient(135deg, var(--accent) 0%, #0ecf8f 100%);
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
+}
+
+.lead-submit-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(29, 158, 117, 0.28);
+}
+
+.lead-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.lead-action-bar {
+  border-top: 1px solid var(--border-color);
+  padding: 14px 16px 16px;
+  display: flex;
+  justify-content: center;
+  background: var(--bg-input);
+}
+
+.lead-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(29,158,117,0.22);
+  background: rgba(29,158,117,0.1);
+  color: var(--text-primary);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform var(--transition), background var(--transition), border-color var(--transition);
+}
+
+.lead-action-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(29,158,117,0.18);
+  border-color: var(--accent);
+}
+
+.lead-action-icon {
+  font-size: 16px;
+}
+
 /* ─── Powered By ─── */
 .powered-by {
   font-size: 11.5px;

@@ -8,6 +8,7 @@ const MODEL_LABEL = 'Groq · Llama 3.3 70B';
 const MAX_TOKENS = 512;
 const USER_MESSAGE_LIMIT = 2000;
 const HISTORY_TOKEN_LIMIT = 9000;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const SYSTEM_PROMPT = `You are a customer support assistant for Houston Systems Pvt. Ltd., a security and access management automation company based in Noida, India.
 
 Company info:
@@ -101,6 +102,8 @@ const QUICK_REPLIES = [
   'Where are you located?',
   'How can I contact support?',
 ];
+
+const EMAIL_VALIDATION_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function formatTime(date) {
   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -270,6 +273,93 @@ function MessageBubble({ message }) {
   );
 }
 
+function LeadFormBubble({
+  leadName,
+  leadPhone,
+  leadEmail,
+  leadRegarding,
+  leadPhoneError,
+  leadEmailError,
+  leadError,
+  leadSubmitting,
+  onChangeName,
+  onChangePhone,
+  onChangeEmail,
+  onChangeRegarding,
+  onSubmit,
+}) {
+  return (
+    <div className="message-row bot">
+      <div className="bot-avatar" aria-hidden="true">
+        <BotAvatarIcon size={15} />
+      </div>
+      <div className="bubble lead-form-bubble">
+        <form className="lead-form" onSubmit={onSubmit}>
+          <label>
+            Full Name
+            <input
+              type="text"
+              value={leadName}
+              onChange={onChangeName}
+              placeholder="Enter your full name"
+              required
+            />
+          </label>
+          <label>
+            Phone Number
+            <input
+              type="tel"
+              value={leadPhone}
+              onChange={onChangePhone}
+              placeholder="Enter your phone number"
+              inputMode="numeric"
+              pattern="[0-9]{10}"
+              maxLength={10}
+              aria-invalid={leadPhoneError ? 'true' : 'false'}
+              aria-describedby={leadPhoneError ? 'lead-phone-error' : undefined}
+              required
+            />
+            {leadPhoneError && (
+              <span className="lead-field-error" id="lead-phone-error" role="alert">
+                {leadPhoneError}
+              </span>
+            )}
+          </label>
+          <label>
+            Email Address
+            <input
+              type="email"
+              value={leadEmail}
+              onChange={onChangeEmail}
+              placeholder="Enter your email"
+              aria-invalid={leadEmailError ? 'true' : 'false'}
+              aria-describedby={leadEmailError ? 'lead-email-error' : undefined}
+            />
+            {leadEmailError && (
+              <span className="lead-field-error" id="lead-email-error" role="alert">
+                {leadEmailError}
+              </span>
+            )}
+          </label>
+          <label>
+            Regarding
+            <select value={leadRegarding} onChange={onChangeRegarding} required>
+              <option>Product Inquiry</option>
+              <option>Pricing</option>
+              <option>Technical Support</option>
+              <option>General Query</option>
+            </select>
+          </label>
+          {leadError && <div className="lead-error" role="alert">{leadError}</div>}
+          <button type="submit" className="lead-submit-btn" disabled={leadSubmitting}>
+            {leadSubmitting ? 'Submitting...' : 'Submit'}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
 
 // ── API Key Setup Screen ───────────────────────────────────────────────────────
 export default function App() {
@@ -280,10 +370,20 @@ export default function App() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [showChips, setShowChips] = useState(true);
   const [error, setError] = useState('');
+  const [showLeadForm, setShowLeadForm] = useState(false);
+  const [leadName, setLeadName] = useState('');
+  const [leadPhone, setLeadPhone] = useState('');
+  const [leadEmail, setLeadEmail] = useState('');
+  const [leadRegarding, setLeadRegarding] = useState('Product Inquiry');
+  const [leadPhoneError, setLeadPhoneError] = useState('');
+  const [leadEmailError, setLeadEmailError] = useState('');
+  const [leadError, setLeadError] = useState('');
+  const [leadSubmitting, setLeadSubmitting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   const ELEVEN_API_KEY = import.meta.env.VITE_ELEVEN_API_KEY;
   const ELEVEN_VOICE_ID = import.meta.env.VITE_ELEVEN_VOICE_ID;
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
   const audioRef = useRef(null);
 
@@ -338,24 +438,30 @@ export default function App() {
   // ── Text-to-Speech using ElevenLabs (preferred) with SpeechSynthesis fallback
   const stopAudio = useCallback(() => {
     if (audioRef.current) {
-      try { audioRef.current.pause(); } catch(e) {}
+      try {
+        audioRef.current.pause();
+      } catch {
+        // Ignore pause failures when the browser has already released the audio.
+      }
       audioRef.current = null;
     }
     try {
       if (typeof window !== 'undefined' && window.speechSynthesis) window.speechSynthesis.cancel();
-    } catch (e) {}
+    } catch {
+      // Ignore SpeechSynthesis cancellation failures.
+    }
     setIsSpeaking(false);
   }, []);
 
   function cleanTextForTTS(text) {
     if (!text) return '';
     // remove common bullet markers at start of lines
-    let cleaned = text.split('\n').map(l => l.replace(/^[\s]*[•\-\*\u2022]+\s*/,'')).join(' ');
+    let cleaned = text.split('\n').map(l => l.replace(/^[\s]*[•*\u2022-]+\s*/,'')).join(' ');
     // remove emails and urls
     cleaned = cleaned.replace(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/ig, '');
     cleaned = cleaned.replace(/https?:\/\/\S+|www\.\S+/ig, '');
     // remove extra punctuation that reads awkwardly
-    cleaned = cleaned.replace(/[\u2022\*\-]+/g, '');
+    cleaned = cleaned.replace(/[\u2022*-]+/g, '');
     cleaned = cleaned.replace(/\s+/g, ' ').trim();
     return cleaned;
   }
@@ -488,6 +594,99 @@ export default function App() {
     }
   };
 
+  const resetLeadForm = useCallback(() => {
+    setLeadName('');
+    setLeadPhone('');
+    setLeadEmail('');
+    setLeadRegarding('Product Inquiry');
+    setLeadPhoneError('');
+    setLeadEmailError('');
+    setLeadError('');
+    setLeadSubmitting(false);
+  }, []);
+
+  const handleLeadPhoneChange = useCallback((e) => {
+    setLeadPhone(e.target.value.replace(/\D/g, '').slice(0, 10));
+    setLeadPhoneError('');
+  }, []);
+
+  const handleLeadEmailChange = useCallback((e) => {
+    setLeadEmail(e.target.value);
+    setLeadEmailError('');
+  }, []);
+
+  const handleLeadButtonClick = useCallback(() => {
+    if (showLeadForm) return;
+    setShowChips(false);
+    setShowLeadForm(true);
+    setLeadError('');
+    setMessages(prev => [
+      ...prev,
+      {
+        id: `bot-lead-${Date.now()}`,
+        role: 'bot',
+        text: 'Sure! Please share your details and our team will contact you shortly.',
+        time: formatTime(new Date()),
+      },
+    ]);
+  }, [showLeadForm]);
+
+  const submitLead = useCallback(async (e) => {
+    e.preventDefault();
+    setLeadError('');
+    setLeadPhoneError('');
+    setLeadEmailError('');
+
+    if (!leadName.trim() || !leadPhone.trim() || !leadRegarding.trim()) {
+      setLeadError('Please fill all required fields before submitting.');
+      return;
+    }
+
+    if (!/^\d{10}$/.test(leadPhone)) {
+      setLeadPhoneError('Invalid number — please enter a valid 10 digit number');
+      return;
+    }
+
+    if (leadEmail.trim() && !EMAIL_VALIDATION_REGEX.test(leadEmail.trim())) {
+      setLeadEmailError('Invalid email — please enter a valid email address');
+      return;
+    }
+
+    setLeadSubmitting(true);
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/leads`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: leadName.trim(),
+          phone: leadPhone.trim(),
+          email,
+          regarding: leadRegarding,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || 'Could not save lead.');
+      }
+
+      setMessages(prev => [
+        ...prev,
+        {
+          id: `bot-thanks-${Date.now()}`,
+          role: 'bot',
+          text: 'Thank you! Our team will contact you within 24 hours. 😊',
+          time: formatTime(new Date()),
+        },
+      ]);
+      setShowLeadForm(false);
+      resetLeadForm();
+    } catch (err) {
+      setLeadError(err.message || 'Unable to send lead right now.');
+    } finally {
+      setLeadSubmitting(false);
+    }
+  }, [BACKEND_URL, leadEmail, leadName, leadPhone, leadRegarding, resetLeadForm]);
+
   // ── Render: Chat UI
   return (
     <div className="page-wrapper">
@@ -567,6 +766,26 @@ export default function App() {
           </div>
         )}
 
+        {showLeadForm && (
+          <div className="lead-form-wrapper">
+            <LeadFormBubble
+              leadName={leadName}
+              leadPhone={leadPhone}
+              leadEmail={leadEmail}
+              leadRegarding={leadRegarding}
+              leadPhoneError={leadPhoneError}
+              leadEmailError={leadEmailError}
+              leadError={leadError}
+              leadSubmitting={leadSubmitting}
+              onChangeName={e => setLeadName(e.target.value)}
+              onChangePhone={handleLeadPhoneChange}
+              onChangeEmail={handleLeadEmailChange}
+              onChangeRegarding={e => setLeadRegarding(e.target.value)}
+              onSubmit={submitLead}
+            />
+          </div>
+        )}
+
         {/* ── Error Banner ── */}
         {error && (
           <div className="error-banner" role="alert">⚠ {error}</div>
@@ -596,6 +815,13 @@ export default function App() {
             aria-label="Send message"
           >
             <SendIcon />
+          </button>
+        </div>
+
+        <div className="lead-action-bar">
+          <button className="lead-action-btn" onClick={handleLeadButtonClick} type="button">
+            <span className="lead-action-icon">📞</span>
+            Talk to our team
           </button>
         </div>
 
