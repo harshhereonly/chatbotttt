@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Admin from './Admin.jsx';
+import AdminLogin from './AdminLogin.jsx';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const GROQ_ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions';
@@ -695,8 +696,36 @@ export default function App() {
                       window.location.hash === '#/admin' ||
                       window.location.hash.startsWith('#/admin/');
 
+  const isAdminLoginPage = window.location.hash === '#/admin-login';
+
+  // Check if user is authenticated
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('adminToken') !== null;
+  });
+
+  const handleAdminLoginSuccess = () => {
+    setIsAdminAuthenticated(true);
+    window.location.href = '/#/admin';
+  };
+
+  const handleAdminLogout = () => {
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('adminLoginTime');
+    setIsAdminAuthenticated(false);
+    window.location.href = '/#/';
+  };
+
+  // Route to login if accessing admin without authentication
   if (isAdminPage) {
-    return <Admin />;
+    if (!isAdminAuthenticated) {
+      return <AdminLogin onLoginSuccess={handleAdminLoginSuccess} />;
+    }
+    return <Admin onLogout={handleAdminLogout} />;
+  }
+
+  if (isAdminLoginPage) {
+    return <AdminLogin onLoginSuccess={handleAdminLoginSuccess} />;
   }
 
   // ── Render: Chat UI

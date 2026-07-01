@@ -1,11 +1,13 @@
 from datetime import datetime
 import sqlite3
+import os
 from pathlib import Path
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / 'leads.db'
+ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'admin123')  # Default for development
 
 app = Flask(__name__)
 CORS(app)
@@ -39,6 +41,25 @@ def init_db():
 @app.before_request
 def startup():
     init_db()
+
+
+@app.route('/api/admin/auth', methods=['POST'])
+def admin_auth():
+    """Authenticate admin access with password"""
+    payload = request.get_json(silent=True) or {}
+    password = payload.get('password', '').strip()
+
+    if not password:
+        return jsonify({'success': False, 'message': 'Password is required.'}), 400
+
+    if password == ADMIN_PASSWORD:
+        return jsonify({
+            'success': True,
+            'message': 'Authentication successful',
+            'token': 'admin_token_' + str(datetime.utcnow().timestamp())
+        }), 200
+
+    return jsonify({'success': False, 'message': 'Invalid password.'}), 401
 
 
 @app.route('/api/leads', methods=['POST'])

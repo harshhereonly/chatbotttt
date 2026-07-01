@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import './Admin.css';
 
-export default function Admin() {
+export default function Admin({ onLogout }) {
   const [leads, setLeads] = useState([]);
   const [filteredLeads, setFilteredLeads] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -148,9 +148,19 @@ export default function Admin() {
     <div className="admin-container">
       <div className="admin-header">
         <h1>Admin Dashboard</h1>
-        <button className="back-btn" onClick={handleBackToChat} title="Back to chat">
-          ← Back to Chat
-        </button>
+        <div className="admin-header-buttons">
+          <button className="back-btn" onClick={handleBackToChat} title="Back to chat">
+            ← Back to Chat
+          </button>
+          <button 
+            className="logout-btn" 
+            onClick={onLogout} 
+            title="Logout from admin"
+            aria-label="Logout"
+          >
+            🚪 Logout
+          </button>
+        </div>
       </div>
 
       {error && (
