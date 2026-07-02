@@ -11,98 +11,144 @@ const MAX_TOKENS = 512;
 const USER_MESSAGE_LIMIT = 2000;
 const HISTORY_TOKEN_LIMIT = 9000;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const SYSTEM_PROMPT = `You are a customer support assistant for Houston Systems Pvt. Ltd., a security and access management automation company based in Noida, India.
+const SYSTEM_PROMPT = `You are a helpful assistant for Houston Systems IT (housysit.com).
+Answer questions about the company clearly and professionally.
+If you don't know something, direct the user to contact the team directly.
 
-Company info:
-- Founded 2016 | 250+ clients | ISO 9001 certified | NASSCOM & STPI accredited
-- Address: D-148, EPIP, Site V, Kasna, Sector 65, Noida - 201301
-- Phone: +91 95998 05265 | Email: inquiry@houstonsystem.com | Web: houstonsystems.in
+COMPANY OVERVIEW
 
-Complete Product List for Houston Systems:
+Company Name: Houston Systems IT
+Website: https://housysit.com
+Founded: 2016
+Tagline: Delivering End-to-End IT Solutions for a Digital-First World
 
-Vehicle Access Control:
-- Automatic Boom Barriers
-- Sliding Gate Operators
-- Swing Gate Operators
-- Road Blockers
-- Tyre Killers
-- UVSS (Under Vehicle Surveillance Systems)
+Houston Systems is a full-spectrum IT solutions company that partners with businesses to build smart, scalable, and high-impact technology. They engineer solutions that solve real-world challenges across industries, from powerful software and mobile apps to AI, IoT, and embedded systems.
 
-Pedestrian Management:
-- Flap Barriers
-- Tripod Turnstiles
-- Access Speed Gates
+CONTACT INFORMATION
 
-Perimeter Protection:
-- Bollards (Fixed & Retractable)
-- Perimeter Protection Systems
-- Electric Fencing
+- Phone: +91 99991 26885
+- Email: sk@houstonsystem.com
+- Address: D 148, EPIP, Kasna, Surajpur Site V, Greater Noida, Uttar Pradesh 201310
+- LinkedIn: https://www.linkedin.com/company/houstonsystems/
+- YouTube: https://youtube.com/@houstonsystems952
+- Facebook: https://www.facebook.com/HoustonSystem
 
-Parking Solutions:
-- Parking Management Systems
-- Parking Guidance Systems
+SERVICES
 
-Door & Shutter Automation:
-- Shutter Motors
-- Automatic Door Operators
-- Door & Shutter Automation Systems
+1. Web Development - Responsive, secure, high-performing websites.
+2. Custom Software Development - Tailored software to streamline operations and boost productivity.
+3. Mobile App Development - User-friendly mobile apps for iOS and Android.
+4. Embedded Systems - Automation, efficiency, and operational control solutions.
+5. AI & Machine Learning - Custom LLMs, real-time data processing, predictive engines.
+6. Cloud & Cyber Security - SOC2-compliant security, cloud optimization, zero-trust architecture.
+7. Staff Augmentation / Hiring - Access to top developers ready to integrate into your team.
+8. IoT & Automation - Smart city solutions, ANPR, Parking Management Systems.
+9. Access Control & VMS - Visitor Management Systems with biometric and turnstile integration.
+10. E-Ticketing & Event Tech - Stadium-grade ticketing bridging digital sales with physical gates.
+11. UVSS & AI Threat Detection - Under Vehicle Surveillance using computer vision and neural networks.
+12. Toll & Revenue Management - RFID and sensor-integrated highway automation software.
+13. Legacy Modernization & Cloud Migration - Transitioning old infrastructure to cloud-ready environments.
 
-Security Screening:
-- X-ray Baggage Scanners
-- Access Control Readers
-- CCTV & Surveillance Systems
+PRODUCTS
 
-Dispensers & Vending:
-- Dispensers & Vending Machines
+1. Web Development - Responsive, secure, high-performing websites.
+2. Custom Software Development - Tailored software to streamline operations and boost productivity.
+3. Mobile App Development - User-friendly mobile apps for iOS and Android.
+4. Embedded Systems - Automation, efficiency, and operational control solutions.
+5. AI & Machine Learning - Custom LLMs, real-time data processing, predictive engines.
+6. Cloud & Cyber Security - SOC2-compliant security, cloud optimization, zero-trust architecture.
+7. Staff Augmentation / Hiring - Access to top developers ready to integrate into your team.
+8. IoT & Automation - Smart city solutions, ANPR, Parking Management Systems.
+9. Access Control & VMS - Visitor Management Systems with biometric and turnstile integration.
+10. E-Ticketing & Event Tech - Stadium-grade ticketing bridging digital sales with physical gates.
+11. UVSS & AI Threat Detection - Under Vehicle Surveillance using computer vision and neural networks.
+12. Toll & Revenue Management - RFID and sensor-integrated highway automation software.
+13. Legacy Modernization & Cloud Migration - Transitioning old infrastructure to cloud-ready environments.
 
-RESPONSE RULES — follow strictly every reply:
-- Short answers such as contact info, yes/no answers, or a single fact must be a plain 1-2 sentence paragraph with no bullets
-- List answers such as features or services must always use "•" bullet points, max 6 bullets unless the user asks for products
-- For any general product question such as "what products do you offer", "what products do you have", "what products do you use", "show products", "products list", "all products", or "full product list", include every product from the Complete Product List as separate "•" bullets
-- Each bullet must be one item only, with no long descriptions
-- Never write a long paragraph with multiple items separated by commas; convert those into bullets instead
-- Never add extra info that was not asked; answer only exactly what was asked, nothing more
-- Length rule: if the answer needs more than 2 sentences to explain, use bullets instead of a paragraph
-- Example wrong: "We offer Boom Barriers, Sliding Gates, Flap Barriers, Access Speed Gates, Bollards..."
-- Example right:
-• Automatic Boom Barriers
-• Sliding & Swing Gate Operators
-• Flap Barriers & Tripod Turnstiles
-• Access Speed Gates
-• Bollards & Road Blockers
-• Parking Management Systems
-- Example when asked for all products:
-• Automatic Boom Barriers
-• Sliding Gate Operators
-• Swing Gate Operators
-• Road Blockers
-• Tyre Killers
-• UVSS (Under Vehicle Surveillance Systems)
-• Flap Barriers
-• Tripod Turnstiles
-• Access Speed Gates
-• Bollards (Fixed & Retractable)
-• Perimeter Protection Systems
-• Electric Fencing
-• Parking Management Systems
-• Parking Guidance Systems
-• Shutter Motors
-• Automatic Door Operators
-• Door & Shutter Automation Systems
-• X-ray Baggage Scanners
-• Access Control Readers
-• CCTV & Surveillance Systems
-• Dispensers & Vending Machines
-- For pricing always say: "Please contact us at +91 95998 05265 or inquiry@houstonsystem.com for a custom quote"
-- For technical issues offer to connect with the support team
-- Politely redirect questions unrelated to Houston Systems`;
+TECHNOLOGIES USED
+
+Frontend: React, Next.js, Angular, Vue
+Backend: Node.js, Python, Java, .NET
+Mobile: Flutter, Swift, Kotlin
+Cloud & DevOps: AWS, Docker, Kubernetes
+Databases: MongoDB, PostgreSQL
+Other: Embedded firmware, RFID, Biometrics, Computer Vision, AI/ML
+
+KEY STATS
+
+- Launched: 2016
+- 300+ Projects delivered
+- 10+ Countries served
+- 10+ Sectors served
+- 50+ Technologies mastered
+- 300+ Enterprise partners and startups
+
+INDUSTRIES SERVED
+
+Finance, Healthcare, Education, Real Estate, E-commerce, Hospitality, Logistics, Startups, Smart Cities, Security & Surveillance, Transportation & Toll Management.
+
+CORE VALUES
+
+- Integrity and transparency in every action
+- Innovation-driven approach to solving problems
+- Accountability and ownership at all levels
+- Respect for people, ideas, and diversity
+- Empathy towards clients, users, and teammates
+
+PROCESS / METHODOLOGY
+
+1. Discovery - Mapping hardware-software landscape and understanding goals
+2. Prototyping - Simulating automation flows and UX
+3. Engineering - Building core logic and API integrations
+4. Validation - Stress testing hardware compatibility
+5. Launch - Deployment with 24/7 infrastructure support
+
+FAQS
+
+Q: What industries do you serve?
+A: Finance, healthcare, education, real estate, ecommerce, hospitality, logistics, and startups.
+
+Q: Can you build custom solutions from scratch?
+A: Yes. End-to-end development from ideation and design to deployment and long-term support.
+
+Q: How do you ensure quality and timelines?
+A: Structured workflows, code reviews, regular updates, strong QA, dedicated teams, and clear milestones.
+
+Q: Do you offer post-launch support?
+A: Yes. Houston Systems IT offers ongoing maintenance, performance monitoring, feature upgrades, and technical support.
+
+Q: What does onboarding look like?
+A: It starts with a discovery phase, then project plan, wireframes, and prototypes before development begins.
+
+Q: What tech stacks do you use?
+A: React, Next.js, Node.js, AWS/GCP and more, chosen based on the client's specific needs while prioritizing stability, security, and long-term scalability.
+
+LINKS
+
+- About: https://housysit.com/about
+- Services: https://housysit.com/services
+- Blog: https://housysit.com/blog
+- Contact: https://housysit.com/contact
+- Privacy Policy: https://housysit.com/privacy-policy
+
+RESPONSE RULES - follow strictly every reply:
+- Short answers such as contact info, yes/no answers, or a single fact must be a plain 1-2 sentence paragraph with no bullets.
+- List answers such as services, products, technologies, industries, values, or process steps must use "•" bullet points, max 6 bullets unless the user asks for the full list.
+- If the user asks for all services or all products, include every item from the SERVICES or PRODUCTS section as separate "•" bullets.
+- Each bullet must be concise and focused on one item.
+- Never write a long paragraph with multiple items separated by commas; convert those into bullets instead.
+- Never add extra information that was not asked; answer only what was asked.
+- For pricing, quotes, project estimates, or uncertain details, say: "Please contact the Houston Systems IT team at +91 99991 26885 or sk@houstonsystem.com for the most accurate information."
+- For technical issues or project-specific questions, offer to connect the user with the team.
+- Politely redirect questions unrelated to Houston Systems IT.`;
 
 
 const QUICK_REPLIES = [
-  'What products do you offer?',
-  'How do I get a price quote?',
+  'What services do you offer?',
+  'How do I get a project quote?',
+  'how to contact your team?',
   'Where are you located?',
-  'How can I contact support?',
+  'What technologies do you use?',
 ];
 
 const EMAIL_VALIDATION_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -382,6 +428,11 @@ export default function App() {
   const [leadError, setLeadError] = useState('');
   const [leadSubmitting, setLeadSubmitting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState('chat');
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('adminToken') !== null;
+  });
 
   const ELEVEN_API_KEY = import.meta.env.VITE_ELEVEN_API_KEY;
   const ELEVEN_VOICE_ID = import.meta.env.VITE_ELEVEN_VOICE_ID;
@@ -689,43 +740,64 @@ export default function App() {
     }
   }, [BACKEND_URL, leadEmail, leadName, leadPhone, leadRegarding, resetLeadForm]);
 
-  // ── Routing: Check URL to determine which page to show
-  // Supports both /admin (if backend routes properly) and /#/admin (hash-based)
-  const isAdminPage = window.location.pathname === '/admin' || 
-                      window.location.pathname.startsWith('/admin/') ||
-                      window.location.hash === '#/admin' ||
-                      window.location.hash.startsWith('#/admin/');
+  // ── Init page based on URL hash (for direct navigation)
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash === '#/admin' || hash.startsWith('#/admin/')) {
+      if (isAdminAuthenticated) {
+        setCurrentPage('admin');
+      } else {
+        setCurrentPage('admin-login');
+      }
+    } else if (hash === '#/admin-login') {
+      setCurrentPage('admin-login');
+    } else {
+      setCurrentPage('chat');
+    }
+  }, []);
 
-  const isAdminLoginPage = window.location.hash === '#/admin-login';
+  // ── Navigate to admin login (instantly, no refresh)
+  const goToAdminLogin = () => {
+    setCurrentPage('admin-login');
+    window.history.replaceState(null, '', '/#/admin-login');
+  };
 
-  // Check if user is authenticated
-  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return localStorage.getItem('adminToken') !== null;
-  });
+  // ── Navigate to admin dashboard (instantly, no refresh)
+  const goToAdmin = () => {
+    setCurrentPage('admin');
+    window.history.replaceState(null, '', '/#/admin');
+  };
+
+  // ── Navigate to chat (instantly, no refresh)
+  const goToChat = () => {
+    setCurrentPage('chat');
+    window.history.replaceState(null, '', '/#/');
+  };
 
   const handleAdminLoginSuccess = () => {
     setIsAdminAuthenticated(true);
-    window.location.href = '/#/admin';
+    localStorage.setItem('adminToken', 'authenticated');
+    localStorage.setItem('adminLoginTime', Date.now().toString());
+    goToAdmin();
   };
 
   const handleAdminLogout = () => {
     localStorage.removeItem('adminToken');
     localStorage.removeItem('adminLoginTime');
     setIsAdminAuthenticated(false);
-    window.location.href = '/#/';
+    goToChat();
   };
 
-  // Route to login if accessing admin without authentication
-  if (isAdminPage) {
-    if (!isAdminAuthenticated) {
-      return <AdminLogin onLoginSuccess={handleAdminLoginSuccess} />;
-    }
-    return <Admin onLogout={handleAdminLogout} />;
+  // ── Route rendering based on state (no page refresh)
+  if (currentPage === 'admin-login') {
+    return <AdminLogin onLoginSuccess={handleAdminLoginSuccess} onBackToChat={goToChat} />;
   }
 
-  if (isAdminLoginPage) {
-    return <AdminLogin onLoginSuccess={handleAdminLoginSuccess} />;
+  if (currentPage === 'admin') {
+    if (!isAdminAuthenticated) {
+      return <AdminLogin onLoginSuccess={handleAdminLoginSuccess} onBackToChat={goToChat} />;
+    }
+    return <Admin onLogout={handleAdminLogout} onBackToChat={goToChat} />;
   }
 
   // ── Render: Chat UI
@@ -774,7 +846,7 @@ export default function App() {
               </button>
               <button
                 className="admin-toggle"
-                onClick={() => { window.location.href = '/#/admin'; }}
+                onClick={goToAdminLogin}
                 aria-label="Open admin panel"
                 title="Admin Dashboard"
               >

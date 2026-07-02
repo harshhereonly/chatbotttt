@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import './Admin.css';
 
-export default function Admin({ onLogout }) {
+export default function Admin({ onLogout, onBackToChat }) {
   const [leads, setLeads] = useState([]);
   const [filteredLeads, setFilteredLeads] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -141,8 +141,12 @@ export default function Admin({ onLogout }) {
   }, [filteredLeads]);
 
   const handleBackToChat = useCallback(() => {
-    window.location.href = '/#/';
-  }, []);
+    if (onBackToChat) {
+      onBackToChat();
+    } else {
+      window.location.href = '/#/';
+    }
+  }, [onBackToChat]);
 
   return (
     <div className="admin-container">

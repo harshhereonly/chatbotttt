@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import './Admin.css';
 
-export default function AdminLogin({ onLoginSuccess }) {
+export default function AdminLogin({ onLoginSuccess, onBackToChat }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -96,7 +96,7 @@ export default function AdminLogin({ onLoginSuccess }) {
         <div className="login-footer">
           <button
             className="back-to-chat-btn"
-            onClick={() => { window.location.href = '/#/'; }}
+            onClick={onBackToChat || (() => { window.location.href = '/#/'; })}
             title="Back to chat"
           >
             ← Back to Chat
