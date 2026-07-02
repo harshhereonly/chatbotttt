@@ -436,7 +436,7 @@ export default function App() {
 
   const ELEVEN_API_KEY = import.meta.env.VITE_ELEVEN_API_KEY;
   const ELEVEN_VOICE_ID = import.meta.env.VITE_ELEVEN_VOICE_ID;
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://chatbotttt-6ory.onrender.com';
 
   const audioRef = useRef(null);
 

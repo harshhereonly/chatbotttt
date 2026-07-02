@@ -24,7 +24,7 @@ export default function AdminLogin({ onLoginSuccess, onBackToChat }) {
 
     try {
       // Validate password by checking with backend
-      const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+      const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://chatbotttt-6ory.onrender.com';
       const res = await fetch(`${BACKEND_URL}/api/admin/auth`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
