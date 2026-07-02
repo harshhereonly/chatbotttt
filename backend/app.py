@@ -10,6 +10,7 @@ DB_PATH = BASE_DIR / 'leads.db'
 ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'admin123')  # Default for development
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL') or f'sqlite:///{DB_PATH}'
 CORS(app)
 
 CREATE_TABLE_SQL = '''
