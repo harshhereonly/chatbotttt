@@ -11,24 +11,29 @@ const MAX_TOKENS = 512;
 const USER_MESSAGE_LIMIT = 2000;
 const HISTORY_TOKEN_LIMIT = 9000;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const SYSTEM_PROMPT = `You are a helpful assistant for Houston Systems IT (housysit.com).
+const SYSTEM_PROMPT = `You are a helpful assistant for Houston Systems (houstonsystems.in / housysit.com).
 Answer questions about the company clearly and professionally.
 If you don't know something, direct the user to contact the team directly.
 
 COMPANY OVERVIEW
 
-Company Name: Houston Systems IT
-Website: https://housysit.com
+Company Name: Houston Systems (Houston Systems Private Limited / "Housys")
+Website: https://www.houstonsystems.in
 Founded: 2016
-Tagline: Delivering End-to-End IT Solutions for a Digital-First World
+Tagline: Delivering End-to-End IT Solutions for a Digital-First World / "Our Vision, Your Future"
 
-Houston Systems is a full-spectrum IT solutions company that partners with businesses to build smart, scalable, and high-impact technology. They engineer solutions that solve real-world challenges across industries, from powerful software and mobile apps to AI, IoT, and embedded systems.
+Houston Systems is a full-spectrum technology company operating across two connected fronts:
+(1) IT Solutions - software, mobile apps, AI, IoT, and embedded systems for businesses, and
+(2) Security & Safety Automation - physical access control, perimeter security, and traffic/parking
+automation hardware. Design work is led by a team based in California, USA ("Designed in USA, Built
+for Excellence"), with manufacturing and headquarters in Greater Noida, India.
 
 CONTACT INFORMATION
 
 - Phone: +91 99991 26885
+- WhatsApp: +91 99991 26881
 - Email: sk@houstonsystem.com
-- Address: D 148, EPIP, Kasna, Surajpur Site V, Greater Noida, Uttar Pradesh 201310
+- Address: D-148, EPIP, Kasna, Surajpur Site V, Greater Noida, Uttar Pradesh 201310, India
 - LinkedIn: https://www.linkedin.com/company/houstonsystems/
 - YouTube: https://youtube.com/@houstonsystems952
 - Facebook: https://www.facebook.com/HoustonSystem
@@ -38,32 +43,44 @@ SERVICES
 1. Web Development - Responsive, secure, high-performing websites.
 2. Custom Software Development - Tailored software to streamline operations and boost productivity.
 3. Mobile App Development - User-friendly mobile apps for iOS and Android.
-4. Embedded Systems - Automation, efficiency, and operational control solutions.
-5. AI & Machine Learning - Custom LLMs, real-time data processing, predictive engines.
-6. Cloud & Cyber Security - SOC2-compliant security, cloud optimization, zero-trust architecture.
-7. Staff Augmentation / Hiring - Access to top developers ready to integrate into your team.
-8. IoT & Automation - Smart city solutions, ANPR, Parking Management Systems.
-9. Access Control & VMS - Visitor Management Systems with biometric and turnstile integration.
-10. E-Ticketing & Event Tech - Stadium-grade ticketing bridging digital sales with physical gates.
-11. UVSS & AI Threat Detection - Under Vehicle Surveillance using computer vision and neural networks.
-12. Toll & Revenue Management - RFID and sensor-integrated highway automation software.
-13. Legacy Modernization & Cloud Migration - Transitioning old infrastructure to cloud-ready environments.
+4. UI/UX Design - User-centric interface and experience design.
+5. Embedded Systems - Automation, efficiency, and operational control solutions.
+6. AI & Machine Learning - Custom LLMs, real-time data processing, predictive engines.
+7. Cloud & Cyber Security - SOC2-compliant security, cloud optimization, zero-trust architecture.
+8. Staff Augmentation / Hiring - Access to top developers ready to integrate into your team.
+9. IoT & Automation - Smart city solutions, ANPR, Parking Management Systems.
+10. Access Control & VMS - Visitor Management Systems with biometric and turnstile integration.
+11. E-Ticketing & Event Tech - Stadium-grade ticketing bridging digital sales with physical gates.
+12. UVSS & AI Threat Detection - Under Vehicle Surveillance using computer vision and neural networks.
+13. Toll & Revenue Management - RFID and sensor-integrated highway automation software.
+14. Legacy Modernization & Cloud Migration - Transitioning old infrastructure to cloud-ready environments.
 
 PRODUCTS
 
-1. Web Development - Responsive, secure, high-performing websites.
-2. Custom Software Development - Tailored software to streamline operations and boost productivity.
-3. Mobile App Development - User-friendly mobile apps for iOS and Android.
-4. Embedded Systems - Automation, efficiency, and operational control solutions.
-5. AI & Machine Learning - Custom LLMs, real-time data processing, predictive engines.
+Security & Automation Hardware (houstonsystems.in):
+1. Entrance Automation System - automatic boom barriers, road blockers, swing/sliding gate operators, door and shutter automation.
+2. Pedestrian Access Gates - tripod turnstiles, flap barriers for controlled foot traffic.
+3. Perimeter Security System - security bollards, hydraulic rising bollards, perimeter protection systems.
+4. Indoor Security System - access control (RFID/biometric), visitor management, queue management, footfall management.
+
+Solutions (bundled use-case offerings):
+1. Parking Solutions - parking management and real-time guidance systems.
+2. Access Management - integrated entry/exit and identity verification systems.
+3. Traffic Solutions - electronic toll management, ANPR, weigh-in-motion, traffic signal and lane display systems.
+
+IT Products & Platforms:
+1. Web Development - responsive, secure, high-performing websites.
+2. Custom Software Development - tailored software to streamline operations and boost productivity.
+3. Mobile App Development - user-friendly mobile apps for iOS and Android.
+4. Embedded Systems - automation, efficiency, and operational control solutions.
+5. AI & Machine Learning - custom LLMs, real-time data processing, predictive engines.
 6. Cloud & Cyber Security - SOC2-compliant security, cloud optimization, zero-trust architecture.
-7. Staff Augmentation / Hiring - Access to top developers ready to integrate into your team.
-8. IoT & Automation - Smart city solutions, ANPR, Parking Management Systems.
-9. Access Control & VMS - Visitor Management Systems with biometric and turnstile integration.
-10. E-Ticketing & Event Tech - Stadium-grade ticketing bridging digital sales with physical gates.
-11. UVSS & AI Threat Detection - Under Vehicle Surveillance using computer vision and neural networks.
-12. Toll & Revenue Management - RFID and sensor-integrated highway automation software.
-13. Legacy Modernization & Cloud Migration - Transitioning old infrastructure to cloud-ready environments.
+7. IoT & Automation - smart city solutions, ANPR, Parking Management Systems.
+8. Access Control & VMS - Visitor Management Systems with biometric and turnstile integration.
+9. E-Ticketing & Event Tech - stadium-grade ticketing bridging digital sales with physical gates.
+10. UVSS & AI Threat Detection - under vehicle surveillance using computer vision and neural networks.
+11. Toll & Revenue Management - RFID and sensor-integrated highway automation software.
+12. Legacy Modernization & Cloud Migration - transitioning old infrastructure to cloud-ready environments.
 
 TECHNOLOGIES USED
 
@@ -76,7 +93,7 @@ Other: Embedded firmware, RFID, Biometrics, Computer Vision, AI/ML
 
 KEY STATS
 
-- Launched: 2016
+- Founded/Launched: 2016
 - 300+ Projects delivered
 - 10+ Countries served
 - 10+ Sectors served
@@ -85,15 +102,18 @@ KEY STATS
 
 INDUSTRIES SERVED
 
-Finance, Healthcare, Education, Real Estate, E-commerce, Hospitality, Logistics, Startups, Smart Cities, Security & Surveillance, Transportation & Toll Management.
+Finance, Healthcare, Education, Real Estate, E-commerce, Hospitality, Logistics, Startups, Smart Cities,
+Security & Surveillance, Transportation & Toll Management, Corporate Offices, Government Buildings &
+Embassies, Airports & Transport Hubs, Stadiums & Sports Venues, Railway Stations, Residential Communities.
 
 CORE VALUES
 
 - Integrity and transparency in every action
-- Innovation-driven approach to solving problems
+- Innovation-driven approach to solving problems ("Evolving with You")
 - Accountability and ownership at all levels
 - Respect for people, ideas, and diversity
-- Empathy towards clients, users, and teammates
+- Empathy towards clients, users, and teammates ("Partnership, Not Sales")
+- Excellence Uncompromised - going beyond industry standards in reliability and performance
 
 PROCESS / METHODOLOGY
 
@@ -106,7 +126,7 @@ PROCESS / METHODOLOGY
 FAQS
 
 Q: What industries do you serve?
-A: Finance, healthcare, education, real estate, ecommerce, hospitality, logistics, and startups.
+A: Finance, healthcare, education, real estate, ecommerce, hospitality, logistics, startups, smart cities, and transportation/toll management.
 
 Q: Can you build custom solutions from scratch?
 A: Yes. End-to-end development from ideation and design to deployment and long-term support.
@@ -115,13 +135,19 @@ Q: How do you ensure quality and timelines?
 A: Structured workflows, code reviews, regular updates, strong QA, dedicated teams, and clear milestones.
 
 Q: Do you offer post-launch support?
-A: Yes. Houston Systems IT offers ongoing maintenance, performance monitoring, feature upgrades, and technical support.
+A: Yes. Houston Systems offers ongoing maintenance, performance monitoring, feature upgrades, and technical support.
 
 Q: What does onboarding look like?
 A: It starts with a discovery phase, then project plan, wireframes, and prototypes before development begins.
 
 Q: What tech stacks do you use?
 A: React, Next.js, Node.js, AWS/GCP and more, chosen based on the client's specific needs while prioritizing stability, security, and long-term scalability.
+
+Q: Where is Houston Systems based?
+A: Headquarters and manufacturing are in Greater Noida, Uttar Pradesh, India, with a product design team based in California, USA.
+
+Q: What year was Houston Systems founded?
+A: 2016.
 
 LINKS
 
@@ -130,6 +156,8 @@ LINKS
 - Blog: https://housysit.com/blog
 - Contact: https://housysit.com/contact
 - Privacy Policy: https://housysit.com/privacy-policy
+- Security/Automation site: https://www.houstonsystems.in
+- Security/Automation Contact: https://www.houstonsystems.in/contact
 
 RESPONSE RULES - follow strictly every reply:
 - Short answers such as contact info, yes/no answers, or a single fact must be a plain 1-2 sentence paragraph with no bullets.
@@ -138,10 +166,9 @@ RESPONSE RULES - follow strictly every reply:
 - Each bullet must be concise and focused on one item.
 - Never write a long paragraph with multiple items separated by commas; convert those into bullets instead.
 - Never add extra information that was not asked; answer only what was asked.
-- For pricing, quotes, project estimates, or uncertain details, say: "Please contact the Houston Systems IT team at +91 99991 26885 or sk@houstonsystem.com for the most accurate information."
+- For pricing, quotes, project estimates, or uncertain details, say: "Please contact the Houston Systems team at +91 99991 26885 or sk@houstonsystem.com for the most accurate information."
 - For technical issues or project-specific questions, offer to connect the user with the team.
-- Politely redirect questions unrelated to Houston Systems IT.`;
-
+- Politely redirect questions unrelated to Houston Systems.`;
 
 const QUICK_REPLIES = [
   'What services do you offer?',
@@ -414,8 +441,6 @@ export default function App() {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [voiceEnabled, setVoiceEnabled] = useState(true);
-  const [isSpeaking, setIsSpeaking] = useState(false);
   const [showChips, setShowChips] = useState(true);
   const [error, setError] = useState('');
   const [showLeadForm, setShowLeadForm] = useState(false);
@@ -434,11 +459,7 @@ export default function App() {
     return localStorage.getItem('adminToken') !== null;
   });
 
-  const ELEVEN_API_KEY = import.meta.env.VITE_ELEVEN_API_KEY;
-  const ELEVEN_VOICE_ID = import.meta.env.VITE_ELEVEN_VOICE_ID;
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://chatbotttt-6ory.onrender.com';
-
-  const audioRef = useRef(null);
 
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
@@ -488,115 +509,10 @@ export default function App() {
     );
   }, []);
 
-  // ── Text-to-Speech using ElevenLabs (preferred) with SpeechSynthesis fallback
-  const stopAudio = useCallback(() => {
-    if (audioRef.current) {
-      try {
-        audioRef.current.pause();
-      } catch {
-        // Ignore pause failures when the browser has already released the audio.
-      }
-      audioRef.current = null;
-    }
-    try {
-      if (typeof window !== 'undefined' && window.speechSynthesis) window.speechSynthesis.cancel();
-    } catch {
-      // Ignore SpeechSynthesis cancellation failures.
-    }
-    setIsSpeaking(false);
-  }, []);
-
-  function cleanTextForTTS(text) {
-    if (!text) return '';
-    // remove common bullet markers at start of lines
-    let cleaned = text.split('\n').map(l => l.replace(/^[\s]*[•*\u2022-]+\s*/,'')).join(' ');
-    // remove emails and urls
-    cleaned = cleaned.replace(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/ig, '');
-    cleaned = cleaned.replace(/https?:\/\/\S+|www\.\S+/ig, '');
-    // remove extra punctuation that reads awkwardly
-    cleaned = cleaned.replace(/[\u2022*-]+/g, '');
-    cleaned = cleaned.replace(/\s+/g, ' ').trim();
-    return cleaned;
-  }
-
-  const speakText = useCallback(async (text) => {
-    if (!voiceEnabled) return;
-    // stop any currently playing audio
-    stopAudio();
-
-    const cleaned = cleanTextForTTS(text);
-    if (!cleaned) return;
-
-    // Prefer ElevenLabs
-    if (ELEVEN_API_KEY && ELEVEN_VOICE_ID) {
-      try {
-        setIsSpeaking(true);
-        const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${ELEVEN_VOICE_ID}`, {
-          method: 'POST',
-          headers: {
-            'xi-api-key': ELEVEN_API_KEY,
-            'Content-Type': 'application/json',
-            'Accept': 'audio/mpeg',
-          },
-          body: JSON.stringify({ text: cleaned, model: 'eleven_multilingual_v2' }),
-        });
-
-        if (!res.ok) {
-          const body = await res.text().catch(() => '');
-          throw new Error(body || `ElevenLabs TTS error ${res.status}`);
-        }
-
-        const audioData = await res.arrayBuffer();
-        const blob = new Blob([audioData], { type: 'audio/mpeg' });
-        const url = URL.createObjectURL(blob);
-        const audio = new Audio(url);
-        audioRef.current = audio;
-        try {
-          await audio.play();
-        } catch (playErr) {
-          console.error('Audio playback failed', playErr);
-          setError(`Unable to play audio: ${playErr.message}`);
-        }
-        audio.onended = () => {
-          URL.revokeObjectURL(url);
-          audioRef.current = null;
-          setIsSpeaking(false);
-        };
-        return;
-      } catch (err) {
-        console.error('ElevenLabs TTS failed, falling back:', err);
-        setError(err.message || String(err));
-        setIsSpeaking(false);
-        // fall through to SpeechSynthesis fallback
-      }
-    }
-
-    // Fallback: browser SpeechSynthesis
-    try {
-      if (typeof window !== 'undefined' && window.speechSynthesis) {
-        const utter = new SpeechSynthesisUtterance(cleaned);
-        const voices = window.speechSynthesis.getVoices();
-        if (voices && voices.length) utter.voice = voices[0];
-        window.speechSynthesis.cancel();
-        setIsSpeaking(true);
-        window.speechSynthesis.speak(utter);
-        utter.onend = () => setIsSpeaking(false);
-      }
-    } catch (synthErr) {
-      console.error('SpeechSynthesis fallback failed:', synthErr);
-      setIsSpeaking(false);
-    }
-  }, [voiceEnabled, ELEVEN_API_KEY, ELEVEN_VOICE_ID, stopAudio]);
-
-  // welcome is spoken directly from the user click handler when opening chat
-
   // ── Send a message
   const sendMessage = useCallback(async (text) => {
     const trimmed = text.trim();
     if (!trimmed || isTyping) return;
-
-    // stop any currently playing audio when user sends a new message
-    stopAudio();
 
     if (trimmed.length > USER_MESSAGE_LIMIT) {
       setError(`Please keep your message under ${USER_MESSAGE_LIMIT} characters.`);
@@ -630,14 +546,12 @@ export default function App() {
         text: replyText,
         time: formatTime(new Date()),
       }]);
-      // Speak the reply if voice is enabled
-      speakText(replyText).catch(() => {});
     } catch (err) {
       setError(err.message);
     } finally {
       setIsTyping(false);
     }
-  }, [messages, isTyping, callGroq, speakText, stopAudio]);
+  }, [messages, isTyping, callGroq]);
 
   // ── Keyboard: Enter sends, Shift+Enter adds newline
   const handleKeyDown = (e) => {
@@ -823,26 +737,11 @@ export default function App() {
               <button
                 className="close-chat"
                 aria-label="Close chat"
-                onClick={() => { stopAudio(); setIsOpen(false); }}
+                onClick={() => setIsOpen(false)}
                 title="Close chat"
                 style={{ marginLeft: 8 }}
               >
                 ✕
-              </button>
-              <button
-                className={`voice-toggle ${voiceEnabled ? 'on' : 'off'}`}
-                onClick={() => setVoiceEnabled(v => !v)}
-                aria-pressed={voiceEnabled}
-                aria-label="Toggle voice"
-                title={voiceEnabled ? 'Voice on' : 'Voice off'}
-              >
-                <svg className="speaker-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M5 9v6h4l5 4V5L9 9H5z" fill="currentColor" />
-                  <path d="M16.5 8.5a4.5 4.5 0 010 7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                </svg>
-                {isSpeaking && (
-                  <span className="voice-dot" aria-hidden="true" />
-                )}
               </button>
               <button
                 className="admin-toggle"
@@ -956,13 +855,11 @@ export default function App() {
           className="chat-launcher"
           aria-label="Open chat"
           onClick={() => {
-            // user gesture: open chat, show welcome, and speak immediately
+            // user gesture: open chat and show welcome
             if (!isOpen) {
               setIsOpen(true);
               const welcome = makeWelcome();
               setMessages([welcome]);
-              // speak immediately within user click handler
-              if (voiceEnabled) speakText(welcome.text).catch(() => {});
             }
           }}
         >
